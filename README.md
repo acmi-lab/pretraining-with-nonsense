@@ -38,7 +38,7 @@ To run a finetuning experiment, simply run
 ./pipeline_t5.sh <experiment_config_path>
 
 # for pointer-generator models
-./pipeline_t5.sh <experiment_config_path>
+./pipeline_pg.sh <experiment_config_path>
 ```
 
 For example, for finetuning a T5 model on cnndailymail dataset, starting from 
