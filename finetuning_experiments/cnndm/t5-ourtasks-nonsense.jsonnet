@@ -15,7 +15,7 @@
         "type": "pretrained_t5",
         "max_decode_length": 148,
         "min_decode_length": 44,
-        "model_weights_file": "./pretrained_models/pretrained_ourtasks/best.th",
+        "model_weights_file": "./pretrained_models/pretrained_ourtasks_nonsense/best.th",
         "pretrained_model_name": "t5-small"
     },
     "train_data_path": "dataset_root/finetuning_datasets/cnndm/train.jsonl",

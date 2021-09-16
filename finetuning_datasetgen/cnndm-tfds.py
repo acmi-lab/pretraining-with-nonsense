@@ -1,3 +1,4 @@
+import os.path
 import pdb
 import tensorflow_datasets as tfds
 import nltk, jsonlines
@@ -43,15 +44,21 @@ test_ds2 = get_dataset_reformed(test_ds)
 
 
 
-with jsonlines.open("../dataset_root/finetuning_datasets/cnn_dailymail_tfds/train.jsonl", "w") as w:
+if not os.path.exists("../dataset_root/finetuning_datasets"):
+    os.mkdir("../dataset_root/finetuning_datasets")
+
+os.mkdir("../dataset_root/finetuning_datasets/cnndm")
+
+
+with jsonlines.open("../dataset_root/finetuning_datasets/cnndm/train.jsonl", "w") as w:
     for dp in train_ds2:
         w.write(dp)
 
-with jsonlines.open("../dataset_root/finetuning_datasets/cnn_dailymail_tfds/val.jsonl", "w") as w:
+with jsonlines.open("../dataset_root/finetuning_datasets/cnndm/val.jsonl", "w") as w:
     for dp in val_ds2:
         w.write(dp)
 
-with jsonlines.open("../dataset_root/finetuning_datasets/cnn_dailymail_tfds/test.jsonl", "w") as w:
+with jsonlines.open("../dataset_root/finetuning_datasets/cnndm/test.jsonl", "w") as w:
     for dp in test_ds2:
         w.write(dp)
 
