@@ -10,32 +10,6 @@ from tqdm import tqdm
 from collections import defaultdict
 
 
-def break_at_periods(s):
-    lines = []
-    prev = 0
-    period_indices = [i for (i,ch) in enumerate(s) if ch=="."]
-    for elem in period_indices:
-        lines.append(s[prev:elem+1])
-        prev=elem+1
-    return lines
-
-
-match_pattern = re.compile(r'.*target_\d+(_\d+).*')
-match_pattern_compiled = re.compile(match_pattern)
-def paraphrase_reduce(s):
-    words = s.split(" ")
-    new_words = []
-    for w in words:
-        res = match_pattern_compiled.match(w)
-        if res:
-            start_ind, end_ind = res.regs[1]
-            new_word = w[:start_ind]+w[end_ind:]
-            new_words.append(new_word)
-        else:
-            new_words.append(w)
-    return " ".join(new_words)
-
-
 def evaluate_rouge_using_huggingface(test_preds):
     rouge = nlp.load_metric('rouge')
     # all_scores = {"rouge1":[],"rouge2":[],"rougel":[], "exactmatch":[], "unordered_exactmatch":[]}
@@ -44,24 +18,9 @@ def evaluate_rouge_using_huggingface(test_preds):
         generated = elem["prediction"].lower()
         reference = elem["ground_truth"].lower()
 
-        generated = paraphrase_reduce(generated)
-        reference = paraphrase_reduce(reference)
-
     #     second one is ground truth
         rouge.add( prediction=generated, reference=reference)
         all_scores["exactmatch"].append(generated==reference)
-
-        # unordered exact match
-        try:
-            generated_lines = break_at_periods(generated)
-            generated_lines = [x.strip() for x in generated_lines]
-            generated_lines = sorted(generated_lines)
-            reference_lines = break_at_periods(reference)
-            reference_lines = [x.strip() for x in reference_lines]
-            reference_lines = sorted(reference_lines)
-            all_scores["unordered_exactmatch"].append(generated_lines==reference_lines)
-        except ValueError:  # can happen if there is no period generated
-            all_scores["unordered_exactmatch"].append(0)
 
 
     score = rouge.compute(rouge_types=["rouge1", "rouge2", "rougeL"])
